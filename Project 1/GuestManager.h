@@ -1,17 +1,17 @@
 #pragma once
 #include <vector>
 
-enum class RoomType
-{
-    Standard,
-    Comfort
-};
-
 enum class GuestType
 {
     Family,
     Businessman,
     Rockstar
+};
+
+enum class RoomType
+{
+    Standard,
+    Comfort
 };
 
 class Guest
