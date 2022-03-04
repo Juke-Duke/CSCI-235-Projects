@@ -101,8 +101,8 @@ Rockstar::~Rockstar() {}
  * @param dayPriceComfort Price per day for comfort room service.
  */
 GuestManager::GuestManager(int standardRooms, int dayPriceStandard, int comfortRooms, int dayPriceComfort) :
-    standardRooms(standardRooms), dayPriceStandard(dayPriceStandard), comfortRooms(comfortRooms), 
-    dayPriceComfort(dayPriceComfort), MAX_STANDARD(standardRooms), MAX_COMFORT(comfortRooms) {}
+    standardRooms(standardRooms), dayPriceStandard(dayPriceStandard), comfortRooms(comfortRooms), dayPriceComfort(dayPriceComfort), 
+    MAX_STANDARD(standardRooms), MAX_COMFORT(comfortRooms) {}
 
 /**
  * @brief This will take in arguments to construct a guest class to add into the vector of guest pointers if there is
