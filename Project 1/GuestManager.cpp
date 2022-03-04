@@ -195,8 +195,9 @@ int GuestManager::IncomingProfit() const
 }
 
 /**
- * @brief Will loop throught the whole vector of guest pointers and computethe icnome each guest gives,
- * includign additional income.
+ * @brief Will loop throughout the whole vector of guest pointers and compute the income each guest gives,
+ * including additional income and sets a ratio to the maximum income with no additional cost for ALL rooms.
+ * O(N) Time Complexity, where N is amount of guest pointers in vector.
  * 
  * @return Floating point value of current income with additional income for all 
  * booked rooms divided by maximum income with no additional cost for ALL rooms.
