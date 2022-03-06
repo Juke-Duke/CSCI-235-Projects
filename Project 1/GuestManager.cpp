@@ -121,19 +121,18 @@ bool GuestManager::AddGuest(const GuestType guestType, const RoomType roomType, 
     if (!IsAvailable(roomType))
         return false;
 
-    Guest *guest;
     switch (guestType)
     {
     case GuestType::Family :
-        guest = new Family(guestType, roomType, bookedDays);
+        guests.push_back(new Family(guestType, roomType, bookedDays));
         break;
 
     case GuestType::Businessman :
-        guest = new Businessman(guestType, roomType, bookedDays, additionalIncome);
+        guests.push_back(new Businessman(guestType, roomType, bookedDays, additionalIncome));
         break;
 
     case GuestType::Rockstar :
-        guest = new Rockstar(guestType, roomType, bookedDays);
+        guests.push_back(new Rockstar(guestType, roomType, bookedDays));
         break;
     }
 
@@ -141,8 +140,6 @@ bool GuestManager::AddGuest(const GuestType guestType, const RoomType roomType, 
         --standardRooms;
     else if (roomType == RoomType::Comfort)
         --comfortRooms;
-
-    guests.push_back(guest);
 
     return true;
 }
