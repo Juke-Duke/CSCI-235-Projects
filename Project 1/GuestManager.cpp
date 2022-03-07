@@ -159,9 +159,6 @@ bool GuestManager::IsAvailable(const RoomType roomType, const int inDays) const
     if (roomType == RoomType::Standard && standardRooms > 0 
      || roomType == RoomType::Comfort && comfortRooms > 0)
         return true;
-    else if (roomType == RoomType::Standard && standardRooms == 0 && inDays == 0 
-          || roomType == RoomType::Comfort && comfortRooms == 0 && inDays == 0)
-        return false;
 
     for (Guest *guest : guests)
         if (guest->GetRoomType() == roomType && guest->GetRoomBusyDays() <= inDays)
@@ -181,12 +178,10 @@ int GuestManager::IncomingProfit() const
     int profit = 0;
 
     for (Guest *guest : guests)
-    {
         if (guest->GetRoomType() == RoomType::Standard)
             profit += (dayPriceStandard + guest->GetAdditionalIncome()) * guest->GetBookedDays();
         else if (guest->GetRoomType() == RoomType::Comfort)
             profit += (dayPriceComfort + guest->GetAdditionalIncome()) * guest->GetBookedDays();
-    }
 
     return profit;
 }
@@ -201,24 +196,19 @@ int GuestManager::IncomingProfit() const
  */
 float GuestManager::EarningEfficiency() const
 {
-    float earningEfficency = 0, 
-    maxPerDay = (MAX_STANDARD * dayPriceStandard) + (MAX_COMFORT * dayPriceComfort), 
-    currPerDay = 0;
+    float maxPerDay = (MAX_STANDARD * dayPriceStandard) + (MAX_COMFORT * dayPriceComfort), 
+          currPerDay = 0;
 
     if (maxPerDay == 0)
         return 0;
 
     for (Guest *guest : guests)
-    {
         if (guest->GetRoomType() == RoomType::Standard)
             currPerDay += dayPriceStandard + guest->GetAdditionalIncome();
         else if (guest->GetRoomType() == RoomType::Comfort)
             currPerDay += dayPriceComfort + guest->GetAdditionalIncome();
-    }
 
-    earningEfficency = currPerDay / maxPerDay;
-
-    return earningEfficency;
+    return currPerDay / maxPerDay;
 }
 
 /**
