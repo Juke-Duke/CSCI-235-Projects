@@ -164,7 +164,7 @@ bool GuestManager::IsAvailable(const RoomType roomType, const int inDays) const
         return false;
 
     for (Guest *guest : guests)
-        if (guest->GetRoomBusyDays() <= inDays)
+        if (guest->GetRoomType() == roomType && guest->GetRoomBusyDays() <= inDays)
             return true;
 
     return false;
