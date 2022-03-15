@@ -1,15 +1,16 @@
 #pragma once
 #include <iostream>
 #include <fstream>
+#include <cctype>
 #include <string>
 #include <vector>
 #include "StudentRecord.h"
-using std::string, std::vector, std::fstream;
+using std::string, std::vector;
 
 class RecordManager
 {
 private:
-    vector<StudentRecord*> students;
+    vector<StudentRecord> students;
 
     void AssembleStudents();
 
