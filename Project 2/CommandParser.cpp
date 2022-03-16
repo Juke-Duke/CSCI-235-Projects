@@ -1,14 +1,68 @@
 #include "CommandParser.h"
 
-bool CommandParser::IsSperator(char& arg) 
+bool CommandParser::IsSeperator(char& arg) 
     { return arg == ' ' || arg == '\t'; }
+
+bool CommandParser::IsValidOperator(char& operation)
+    { return operation == '=' || operation == '>' || operation == '<'; }
 
 bool CommandParser::IsValidCommand(string& arg)
 {
-    for (string& command : commands)
+    for (string command : commands)
         if (arg == command)
             return true;
     
+    return false;
+}
+
+bool CommandParser::IsValidField(string& arg)
+{
+    for (string field : fields)
+        if (arg == field)
+            return true;
+    
+    return false;
+}
+
+bool CommandParser::UIntOverflow(string& num)
+{
+    string uIntMax = std::to_string(UINT_MAX);
+    if (num.size() > uIntMax.size())
+    {
+        ErrorMessage(ErrorType::ID_OVERFLOW);
+        return true;
+    }
+    else if (num.size() == uIntMax.size())
+    {
+        for (int j = 0; j < num.size(); ++j)
+            if (num[j] - '0' > uIntMax[j] - '0')
+            {
+                ErrorMessage(ErrorType::ID_OVERFLOW);
+                return true;
+            }
+    }
+
+    return false;
+}
+
+bool CommandParser::ShortOverflow(string& num)
+{
+    string uShortMax = std::to_string(UINT_MAX);
+    if (num.size() > uShortMax.size())
+    {
+        ErrorMessage(ErrorType::AGE_OVERFLOW);
+        return true;
+    }
+    else if (num.size() == uShortMax.size())
+    {
+        for (int j = 0; j < num.size(); ++j)
+            if (num[j] - '0' > uShortMax[j] - '0')
+            {
+                ErrorMessage(ErrorType::AGE_OVERFLOW);
+                return true;
+            }
+    }
+
     return false;
 }
 
@@ -17,43 +71,53 @@ void CommandParser::ErrorMessage(ErrorType error)
     switch(error)
     {
     case ErrorType::ILLEGAL_INPUT :
-        std::cout << "The given input is not written correctly." << std::endl;
+        std::cout << "ERROR: The given input is not written correctly." << std::endl;
         break;
     
     case ErrorType::ILLEGAL_COMMAND :
-        std::cout << "The given command is not available." << std::endl;
+        std::cout << "ERROR: The given command is not available." << std::endl;
+        break;
+
+    case ErrorType::ILLEGAL_FIELD :
+        std::cout << "ERROR: The given field is not available." << std::endl;
         break;
     
-    case ErrorType::ILLEGAL_NAME :
-        std::cout << "The given name is not valid." << std::endl;
+    case ErrorType::INVALID_NAME :
+        std::cout << "ERROR: The given name is not valid." << std::endl;
         break;
     
     case ErrorType::ID_OVERFLOW :
-        std::cout << "The given ID value is too large." << std::endl;
+        std::cout << "ERROR: The given ID value is too large." << std::endl;
         break;
     
     case ErrorType::AGE_OVERFLOW :
         std::cout << "The given age value is too large." << std::endl;
         break;
+    
+    case ErrorType::INVALID_OPERATION :
+        std::cout  << "The given operation is invalid and cannot be executed." << std::endl;
+        break;
     }
 }
 
-vector<string> CommandParser::operator()(string& commandInput)
+vector<string> CommandParser::operator()(string commandInput)
 {
     vector<string> parsedCommand;
     string arg;
-    int argPos = 1, i = 0;
+    int i = 0;
 
-    // First loop for command keyword
     while (i < commandInput.size())
     {
-        if (!IsSperator(commandInput[i]) || !isalpha(commandInput[i]))
+        if (!IsSeperator(commandInput[i]) && !isalpha(commandInput[i]))
         {
             ErrorMessage(ErrorType::ILLEGAL_INPUT);
             return {};
         }
-        else if (IsSperator(commandInput[i]) && arg.size() != 0)
+        else if (i == commandInput.size() - 1 || (IsSeperator(commandInput[i]) && arg.size() != 0))
         {
+            if (i == commandInput.size() - 1 && isalpha(commandInput[i]))
+                arg += commandInput[i];
+
             if (!IsValidCommand(arg))
             {
                 ErrorMessage(ErrorType::ILLEGAL_COMMAND);
@@ -71,6 +135,7 @@ vector<string> CommandParser::operator()(string& commandInput)
         ++i;
     }
 
+    int argPos = 1;
     if (parsedCommand[0] == "ADD")
     {
         bool quoteOn = false;
@@ -78,50 +143,18 @@ vector<string> CommandParser::operator()(string& commandInput)
         {
             if (argPos == 1 || argPos == 3)
             {
-                if (!IsSperator(commandInput[i]) || !isdigit(commandInput[i]))
+                if (!IsSeperator(commandInput[i]) && !isdigit(commandInput[i]))
                 {
                     ErrorMessage(ErrorType::ILLEGAL_INPUT);
                     return {};
                 }
-                else if (IsSperator(commandInput[i]) && arg.size() != 0)
+                else if (IsSeperator(commandInput[i]) && arg.size() != 0)
                 {
-                    if (argPos == 1)
-                    {
-                        string uIntMax = std::to_string(UINT_MAX);
-                        if (arg.size() > uIntMax.size())
-                        {
-                            ErrorMessage(ErrorType::ID_OVERFLOW);
-                            return {};
-                        }
-                        else if (arg.size() == uIntMax.size())
-                        {
-                            for (int j = 0; j < arg.size(); ++j)
-                                if (arg[j] - '0' > uIntMax[j] - '0')
-                                {
-                                    ErrorMessage(ErrorType::ID_OVERFLOW);
-                                    return {};
-                                }
-                        }
-                    }
-                    else if (argPos == 3)
-                    {
-                        string uShortMax = std::to_string(UINT_MAX);
-                        if (arg.size() > uShortMax.size())
-                        {
-                            ErrorMessage(ErrorType::AGE_OVERFLOW);
-                            return {};
-                        }
-                        else if (arg.size() == uShortMax.size())
-                        {
-                            for (int j = 0; j < arg.size(); ++j)
-                                if (arg[j] - '0' > uShortMax[j] - '0')
-                                {
-                                    ErrorMessage(ErrorType::AGE_OVERFLOW);
-                                    return {};
-                                }
-                        }
-                    }
-
+                    if (argPos == 1 && UIntOverflow(arg))
+                        return {};
+                    else if (argPos == 3 && ShortOverflow(arg))
+                        return {};
+                    
                     parsedCommand.push_back(arg);
                     arg = "";
                     ++argPos;
@@ -129,11 +162,13 @@ vector<string> CommandParser::operator()(string& commandInput)
 
                 if (isdigit(commandInput[i]))
                     arg += commandInput[i];
+                
+                if (isdigit(commandInput[i]) == commandInput.size() - 1)
+                    parsedCommand.push_back(arg);
             }
             else if (argPos == 2)
             {
-                if (arg.size() == 0 && (!IsSperator(commandInput[i]) || !isalpha(commandInput[i]) 
-                || commandInput[i] != '\"'))
+                if (arg.size() == 0 && !IsSeperator(commandInput[i]) && !isalpha(commandInput[i]) && commandInput[i] != '\"')
                 {
                     ErrorMessage(ErrorType::ILLEGAL_INPUT);
                     return {};
@@ -154,7 +189,7 @@ vector<string> CommandParser::operator()(string& commandInput)
                         ++argPos;
                     }
                 }
-                else if (IsSperator(commandInput[i]) && arg.size() != 0)
+                else if (IsSeperator(commandInput[i]) && arg.size() != 0)
                 {
                     if (!quoteOn)
                     {
@@ -177,13 +212,6 @@ vector<string> CommandParser::operator()(string& commandInput)
             ++i;
         }
     }
-    else if (parsedCommand[0] == "FIND" || parsedCommand[0] == "REMOVE")
-    {
-        while (i < commandInput.size())
-        {
-            
-        }
-    }
 
-
+    return parsedCommand;
 }

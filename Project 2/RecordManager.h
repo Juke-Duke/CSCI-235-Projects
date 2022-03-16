@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-#include <cctype>
 #include <string>
 #include <vector>
 #include "StudentRecord.h"

@@ -1,16 +1,13 @@
 #include <iostream>
 #include<fstream>
+#include "CommandParser.h"
 
 int main()
 {
-    std::fstream file;
-    file.open("StudentRecords.txt", std::ios::out);
+    CommandParser parser;
+    vector<string> parsed;
+    parsed = parser("");
+    for (string& s : parsed)
+        std::cout << s << std::endl;
 
-    if (file.is_open())
-    {
-        file << "Test";
-        file.close();
-    }
-
-    return 0;
 }
