@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <limits>
 using std::string, std::vector;
 
 enum class ErrorType
@@ -30,7 +29,7 @@ private:
     bool IsValidCommand(string& arg);
     bool IsValidField(string& arg);
     bool UIntOverflow(string& num);
-    bool ShortOverflow(string& num);
+    bool UShortOverflow(string& num);
     void ErrorMessage(ErrorType error);
 
 

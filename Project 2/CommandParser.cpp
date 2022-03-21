@@ -45,7 +45,7 @@ bool CommandParser::UIntOverflow(string& num)
     return false;
 }
 
-bool CommandParser::ShortOverflow(string& num)
+bool CommandParser::UShortOverflow(string& num)
 {
     string uShortMax = std::to_string(USHRT_MAX);
     if (num.size() > uShortMax.size())

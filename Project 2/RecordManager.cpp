@@ -127,9 +127,9 @@ void RecordManager::REMOVE(unsigned short age, char relation)
     {
         if (relation == '=' && students[i].age == age)
             students.erase(students.begin() + i);
-        else if (relation == '>' && students[i].age == age)
+        else if (relation == '>' && students[i].age > age)
             students.erase(students.begin() + i);
-        else if (relation == '<' && students[i].age == age)
+        else if (relation == '<' && students[i].age < age)
             students.erase(students.begin() + i);
     }
 }
