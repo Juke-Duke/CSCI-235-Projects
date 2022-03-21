@@ -13,18 +13,17 @@ private:
 
     void AssembleStudents();
 
-    bool ADD(unsigned int ID, string name, unsigned short age);
-    bool FIND(unsigned int ID, char relation);
-    bool FIND(string name, char relation);
-    bool FIND(unsigned short age, char relation);
-    bool REMOVE(unsigned int ID, char relation);
-    bool REMOVE(string name, char relation);
-    bool REMOVE(unsigned short age, char relation);
-    bool STOP();
-    
-    void UpdateRecords();
+    void ADD(unsigned int ID, string name, unsigned short age);
+    void FIND(unsigned int ID, char relation);
+    void FIND(string name);
+    void FIND(unsigned short age, char relation);
+    void REMOVE(unsigned int ID, char relation);
+    void REMOVE(string name);
+    void REMOVE(unsigned short age, char relation);
+    void STOP();
 
 public:
+    RecordManager();
     vector<StudentRecord> GetStudents();
     bool Process(vector<string>& parsedCommand);
 };

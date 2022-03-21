@@ -47,7 +47,7 @@ bool CommandParser::UIntOverflow(string& num)
 
 bool CommandParser::ShortOverflow(string& num)
 {
-    string uShortMax = std::to_string(UINT_MAX);
+    string uShortMax = std::to_string(USHRT_MAX);
     if (num.size() > uShortMax.size())
     {
         ErrorMessage(ErrorType::AGE_OVERFLOW);
@@ -104,114 +104,14 @@ vector<string> CommandParser::operator()(string commandInput)
 {
     vector<string> parsedCommand;
     string arg;
-    int i = 0;
+    int argPos = 0;
 
-    while (i < commandInput.size())
+    for (char& c : commandInput)
     {
-        if (!IsSeperator(commandInput[i]) && !isalpha(commandInput[i]))
-        {
-            ErrorMessage(ErrorType::ILLEGAL_INPUT);
-            return {};
-        }
-        else if (i == commandInput.size() - 1 || (IsSeperator(commandInput[i]) && arg.size() != 0))
-        {
-            if (i == commandInput.size() - 1 && isalpha(commandInput[i]))
-                arg += commandInput[i];
-
-            if (!IsValidCommand(arg))
-            {
-                ErrorMessage(ErrorType::ILLEGAL_COMMAND);
-                return {};
-            }
-            
-            parsedCommand.push_back(arg);
-            arg = "";
-            ++i;
-            break;
-        }
-
-        if (isalpha(commandInput[i]))
-            arg += commandInput[i];
-        ++i;
+        
     }
 
-    int argPos = 1;
-    if (parsedCommand[0] == "ADD")
-    {
-        bool quoteOn = false;
-        while (i < commandInput.size())
-        {
-            if (argPos == 1 || argPos == 3)
-            {
-                if (!IsSeperator(commandInput[i]) && !isdigit(commandInput[i]))
-                {
-                    ErrorMessage(ErrorType::ILLEGAL_INPUT);
-                    return {};
-                }
-                else if (IsSeperator(commandInput[i]) && arg.size() != 0)
-                {
-                    if (argPos == 1 && UIntOverflow(arg))
-                        return {};
-                    else if (argPos == 3 && ShortOverflow(arg))
-                        return {};
-                    
-                    parsedCommand.push_back(arg);
-                    arg = "";
-                    ++argPos;
-                }
 
-                if (isdigit(commandInput[i]))
-                    arg += commandInput[i];
-                
-                if (isdigit(commandInput[i]) == commandInput.size() - 1)
-                    parsedCommand.push_back(arg);
-            }
-            else if (argPos == 2)
-            {
-                if (arg.size() == 0 && !IsSeperator(commandInput[i]) && !isalpha(commandInput[i]) && commandInput[i] != '\"')
-                {
-                    ErrorMessage(ErrorType::ILLEGAL_INPUT);
-                    return {};
-                }
-                else if (commandInput[i] == '\"')
-                {
-                    if (arg.size() == 0)
-                    {
-                        quoteOn = true;
-                        ++i;
-                        continue;
-                    }
-                    else
-                    {
-                        quoteOn = false;
-                        parsedCommand.push_back(arg);
-                        arg = "";
-                        ++argPos;
-                    }
-                }
-                else if (IsSeperator(commandInput[i]) && arg.size() != 0)
-                {
-                    if (!quoteOn)
-                    {
-                        parsedCommand.push_back(arg);
-                        arg = "";
-                        ++argPos;
-                    }
-                    else
-                    {
-                        arg += commandInput[i];
-                        ++i;
-                        continue;
-                    }
-                }
-
-                if (!isdigit(commandInput[i]))
-                    arg += commandInput[i];
-            }
-
-            ++i;
-        }
-    }
 
     return parsedCommand;
 }
