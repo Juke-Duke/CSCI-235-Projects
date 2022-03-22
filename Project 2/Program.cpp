@@ -13,6 +13,7 @@ int main()
     command = { "STOP" };
     std::vector<StudentRecord> students = manager.GetStudents();
     manager.Process(command);
+
     for (StudentRecord& student : students)
         student.Display();
 }
