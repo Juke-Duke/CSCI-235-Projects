@@ -10,5 +10,5 @@ struct StudentRecord
     unsigned short age;
 
     StudentRecord(unsigned int ID, string name, unsigned short age);
-    void Print();
+    void Display();
 };

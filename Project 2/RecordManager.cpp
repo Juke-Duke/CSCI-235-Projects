@@ -2,7 +2,7 @@
 
 RecordManager::RecordManager() { AssembleStudents(); }
 
-vector<StudentRecord> RecordManager::GetStudents() { return students; }
+vector<StudentRecord> RecordManager::GetStudents() const { return students; }
 
 bool RecordManager::Process(vector<string>& parsedCommand)
 {
@@ -73,11 +73,11 @@ void RecordManager::FIND(unsigned int ID, char relation)
     for (StudentRecord& student : students)
     {
         if (relation == '=' && student.ID == ID)
-            student.Print();
+            student.Display();
         else if (relation == '>' && student.ID > ID)
-            student.Print();
+            student.Display();
         else if (relation == '<' && student.ID < ID)
-            student.Print();
+            student.Display();
     }
 }
 
@@ -85,7 +85,7 @@ void RecordManager::FIND(string name)
 {
     for (StudentRecord& student : students)
         if (student.name == name)
-            student.Print();
+            student.Display();
 }
 
 void RecordManager::FIND(unsigned short age, char relation)
@@ -93,11 +93,11 @@ void RecordManager::FIND(unsigned short age, char relation)
     for (StudentRecord& student : students)
     {
         if (relation == '=' && student.age == age)
-            student.Print();
+            student.Display();
         else if (relation == '>' && student.age > age)
-            student.Print();
+            student.Display();
         else if (relation == '<' && student.age < age)
-            student.Print();
+            student.Display();
     }
 }
 
@@ -136,7 +136,7 @@ void RecordManager::REMOVE(unsigned short age, char relation)
 
 void RecordManager::STOP()
 {
-    std::fstream file;
+    std::ofstream file;
     file.open("StudentRecords.txt", std::ios::out);
 
     if (file.is_open())

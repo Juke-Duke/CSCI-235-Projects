@@ -24,6 +24,6 @@ private:
 
 public:
     RecordManager();
-    vector<StudentRecord> GetStudents();
+    vector<StudentRecord> GetStudents() const;
     bool Process(vector<string>& parsedCommand);
 };

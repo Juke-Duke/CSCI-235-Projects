@@ -6,7 +6,7 @@ int main()
     RecordManager manager;
     std::vector<string> command = { "ADD", "100", "Youssef", "20" };
     manager.Process(command);
-    command = { "ADD", "1090", "Youssef lol", "21" };
+    command = { "ADD", "1090", "Breh", "21" };
     manager.Process(command);
     command = { "REMOVE", "name", "=", "Youssef" };
     manager.Process(command);
@@ -14,5 +14,5 @@ int main()
     std::vector<StudentRecord> students = manager.GetStudents();
     manager.Process(command);
     for (StudentRecord& student : students)
-        student.Print();
+        student.Display();
 }
