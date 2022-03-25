@@ -9,6 +9,6 @@ struct StudentRecord
     string name;
     unsigned short age;
 
-    StudentRecord(unsigned int ID, string name, unsigned short age);
-    void Display();
+    StudentRecord(const unsigned int ID, const string name, const unsigned short age);
+    void Display() const;
 };
