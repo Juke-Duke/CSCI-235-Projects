@@ -93,8 +93,6 @@ void CommandParser::ErrorMessage(const ErrorType error) const
     }
 }
 
-// create a operator() overload that takes a string commandInput and returns a vector<string> that splits the string up by IsSeperator() and IsValidOperator()
-// also check for when there is a quote take the whole string with special symbols and spaces as one string and push it to the vector after the ending quote is found
 vector<string> CommandParser::operator()(const string commandInput) const
 {
     vector<string> parsedCommand;
