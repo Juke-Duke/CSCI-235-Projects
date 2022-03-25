@@ -28,9 +28,12 @@ private:
     bool IsValidOperator(char& operation);
     bool IsValidCommand(string& arg);
     bool IsValidField(string& arg);
+    bool IsNumber(string& num);
     bool UIntOverflow(string& num);
     bool UShortOverflow(string& num);
     void ErrorMessage(ErrorType error);
+
+    vector<string> ValidateParse(vector<string>& parsedCommand);
 
 
 public:

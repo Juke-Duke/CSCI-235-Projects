@@ -4,8 +4,11 @@ RecordManager::RecordManager() { AssembleStudents(); }
 
 vector<StudentRecord> RecordManager::GetStudents() const { return students; }
 
-bool RecordManager::Process(vector<string>& parsedCommand)
+bool RecordManager::Process(vector<string> parsedCommand)
 {
+    if (parsedCommand.size() == 0)
+        return true;
+        
     if (parsedCommand[0] == "ADD")
         ADD(std::stoi(parsedCommand[1]), parsedCommand[2], std::stoi(parsedCommand[3]));
     else if (parsedCommand[0] == "FIND")
@@ -16,7 +19,7 @@ bool RecordManager::Process(vector<string>& parsedCommand)
             FIND(ID, parsedCommand[2][0]);
         }
         else if (parsedCommand[1] == "name")
-            FIND(parsedCommand[3]);
+            FIND(parsedCommand[3], parsedCommand[2][0]);
         else if (parsedCommand[1] == "age")
         {
             unsigned short age = std::stoi(parsedCommand[3]);
@@ -31,7 +34,7 @@ bool RecordManager::Process(vector<string>& parsedCommand)
             REMOVE(ID, parsedCommand[2][0]);
         }
         else if (parsedCommand[1] == "name")
-            REMOVE(parsedCommand[3]);
+            REMOVE(parsedCommand[3], parsedCommand[2][0]);
         else if (parsedCommand[1] == "age")
         {
             unsigned short age = std::stoi(parsedCommand[3]);
@@ -54,12 +57,30 @@ void RecordManager::AssembleStudents()
 
     if (file.is_open())
     {
+        int dataLine = 0;
         unsigned int ID;
-        string name;
+        string name, line;
         unsigned short age;
 
-        while (file >> ID >> name >> age)
-            students.push_back(StudentRecord(ID, name, age));
+        while (std::getline(file, line))
+        {
+            if (dataLine == 0)
+            {
+                ID = std::stoi(line);
+                ++dataLine;
+            }
+            else if (dataLine == 1)
+            {
+                name = line;
+                ++dataLine;
+            }
+            else if (dataLine == 2)
+            {
+                age = std::stoi(line);
+                dataLine = 0;
+                students.push_back(StudentRecord(ID, name, age));
+            }
+        }
 
         file.close();
     }
@@ -81,11 +102,17 @@ void RecordManager::FIND(unsigned int ID, char relation)
     }
 }
 
-void RecordManager::FIND(string name)
+void RecordManager::FIND(string name, char relation)
 {
     for (StudentRecord& student : students)
-        if (student.name == name)
+    {
+        if (relation == '=' && student.name == name)
             student.Display();
+        else if (relation == '>' && student.name > name)
+            student.Display();
+        else if (relation == '<' && student.name < name)
+            student.Display();
+    }
 }
 
 void RecordManager::FIND(unsigned short age, char relation)
@@ -114,11 +141,17 @@ void RecordManager::REMOVE(unsigned int ID, char relation)
     }
 }
 
-void RecordManager::REMOVE(string name)
+void RecordManager::REMOVE(string name, char relation)
 {
-    for (int i = 0; i < students.size(); ++i)
-        if (students[i].name == name)
-            students.erase(students.begin() + i);
+    for (StudentRecord& student : students)
+    {
+        if (relation == '=' && student.name == name)
+            student.Display();
+        else if (relation == '>' && student.name > name)
+            student.Display();
+        else if (relation == '<' && student.name < name)
+            student.Display();
+    }
 }
 
 void RecordManager::REMOVE(unsigned short age, char relation)
@@ -142,7 +175,7 @@ void RecordManager::STOP()
     if (file.is_open())
     {
         for (StudentRecord& student : students)
-            file << student.ID << ' ' << student.name << ' ' << student.age << '\n';
+            file << student.ID << '\n' << student.name << '\n' << student.age << '\n';
         
         file.close();
     }

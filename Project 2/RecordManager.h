@@ -15,15 +15,15 @@ private:
 
     void ADD(unsigned int ID, string name, unsigned short age);
     void FIND(unsigned int ID, char relation);
-    void FIND(string name);
+    void FIND(string name, char relation);
     void FIND(unsigned short age, char relation);
     void REMOVE(unsigned int ID, char relation);
-    void REMOVE(string name);
+    void REMOVE(string name, char relation);
     void REMOVE(unsigned short age, char relation);
     void STOP();
 
 public:
     RecordManager();
     vector<StudentRecord> GetStudents() const;
-    bool Process(vector<string>& parsedCommand);
+    bool Process(vector<string> parsedCommand);
 };
