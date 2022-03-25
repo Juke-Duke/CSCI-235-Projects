@@ -91,6 +91,8 @@ void RecordManager::ADD(unsigned int ID, string name, unsigned short age)
 
 void RecordManager::FIND(unsigned int ID, char relation)
 {
+    std::cout << std::endl;
+
     for (StudentRecord& student : students)
     {
         if (relation == '=' && student.ID == ID)
@@ -100,10 +102,14 @@ void RecordManager::FIND(unsigned int ID, char relation)
         else if (relation == '<' && student.ID < ID)
             student.Display();
     }
+
+    std::cout << std::endl;
 }
 
 void RecordManager::FIND(string name, char relation)
 {
+    std::cout << std::endl;
+
     for (StudentRecord& student : students)
     {
         if (relation == '=' && student.name == name)
@@ -113,10 +119,14 @@ void RecordManager::FIND(string name, char relation)
         else if (relation == '<' && student.name < name)
             student.Display();
     }
+
+    std::cout << std::endl;
 }
 
 void RecordManager::FIND(unsigned short age, char relation)
 {
+    std::cout << std::endl;
+    
     for (StudentRecord& student : students)
     {
         if (relation == '=' && student.age == age)
@@ -126,6 +136,8 @@ void RecordManager::FIND(unsigned short age, char relation)
         else if (relation == '<' && student.age < age)
             student.Display();
     }
+
+    std::cout << std::endl;
 }
 
 void RecordManager::REMOVE(unsigned int ID, char relation)
