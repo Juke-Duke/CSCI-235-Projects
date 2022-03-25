@@ -2,11 +2,9 @@
 
 RecordManager::RecordManager() { AssembleStudents(); }
 
-vector<StudentRecord> RecordManager::GetStudents() const { return students; }
-
 bool RecordManager::Process(vector<string> parsedCommand)
 {
-    if (parsedCommand.size() == 0)
+    if (parsedCommand.empty())
         return true;
         
     if (parsedCommand[0] == "ADD")
@@ -86,10 +84,10 @@ void RecordManager::AssembleStudents()
     }
 }
 
-void RecordManager::ADD(unsigned int ID, string name, unsigned short age)
+void RecordManager::ADD(const unsigned int& ID, const string& name, const unsigned short& age)
     { students.push_back(StudentRecord(ID, name, age)); }
 
-void RecordManager::FIND(unsigned int ID, char relation)
+void RecordManager::FIND(const unsigned int& ID, const char& relation)
 {
     std::cout << std::endl;
 
@@ -106,7 +104,7 @@ void RecordManager::FIND(unsigned int ID, char relation)
     std::cout << std::endl;
 }
 
-void RecordManager::FIND(string name, char relation)
+void RecordManager::FIND(const string& name, const char& relation)
 {
     std::cout << std::endl;
 
@@ -123,7 +121,7 @@ void RecordManager::FIND(string name, char relation)
     std::cout << std::endl;
 }
 
-void RecordManager::FIND(unsigned short age, char relation)
+void RecordManager::FIND(const unsigned short& age, const char& relation)
 {
     std::cout << std::endl;
     
@@ -140,7 +138,7 @@ void RecordManager::FIND(unsigned short age, char relation)
     std::cout << std::endl;
 }
 
-void RecordManager::REMOVE(unsigned int ID, char relation)
+void RecordManager::REMOVE(const unsigned int& ID, const char& relation)
 {
     for (int i = 0; i < students.size(); ++i)
     {
@@ -153,7 +151,7 @@ void RecordManager::REMOVE(unsigned int ID, char relation)
     }
 }
 
-void RecordManager::REMOVE(string name, char relation)
+void RecordManager::REMOVE(const string& name, const char& relation)
 {
     for (StudentRecord& student : students)
     {
@@ -166,7 +164,7 @@ void RecordManager::REMOVE(string name, char relation)
     }
 }
 
-void RecordManager::REMOVE(unsigned short age, char relation)
+void RecordManager::REMOVE(const unsigned short& age, const char& relation)
 {
     for (int i = 0; i < students.size(); ++i)
     {

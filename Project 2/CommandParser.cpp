@@ -1,12 +1,12 @@
 #include "CommandParser.h"
 
-bool CommandParser::IsSeperator(char& arg) 
+bool CommandParser::IsSeperator(const char& arg) const
     { return arg == ' ' || arg == '\t'; }
 
-bool CommandParser::IsValidOperator(char& operation)
+bool CommandParser::IsValidOperator(const char& operation) const
     { return operation == '=' || operation == '>' || operation == '<'; }
 
-bool CommandParser::IsValidCommand(string& arg)
+bool CommandParser::IsValidCommand(const string& arg) const
 {
     for (string command : commands)
         if (arg == command)
@@ -15,7 +15,7 @@ bool CommandParser::IsValidCommand(string& arg)
     return false;
 }
 
-bool CommandParser::IsValidField(string& arg)
+bool CommandParser::IsValidField(const string& arg) const
 {
     for (string field : fields)
         if (arg == field)
@@ -24,7 +24,7 @@ bool CommandParser::IsValidField(string& arg)
     return false;
 }
 
-bool CommandParser::IsNumber(string& num)
+bool CommandParser::IsNumber(const string& num) const
 {
     for (char digit : num)
         if (!isdigit(digit))
@@ -33,7 +33,7 @@ bool CommandParser::IsNumber(string& num)
     return true;
 }
 
-bool CommandParser::UIntOverflow(string& num)
+bool CommandParser::UIntOverflow(const string& num) const
 {
     string uIntMax = std::to_string(UINT_MAX);
     if (num.size() > uIntMax.size())
@@ -48,7 +48,7 @@ bool CommandParser::UIntOverflow(string& num)
     return false;
 }
 
-bool CommandParser::UShortOverflow(string& num)
+bool CommandParser::UShortOverflow(const string& num) const
 {
     string uShortMax = std::to_string(USHRT_MAX);
     if (num.size() > uShortMax.size())
@@ -63,7 +63,7 @@ bool CommandParser::UShortOverflow(string& num)
     return false;
 }
 
-void CommandParser::ErrorMessage(ErrorType error)
+void CommandParser::ErrorMessage(const ErrorType error) const
 {
     switch(error)
     {
@@ -77,10 +77,6 @@ void CommandParser::ErrorMessage(ErrorType error)
 
     case ErrorType::ILLEGAL_FIELD :
         std::cout << "ERROR: The given field is not available." << std::endl;
-        break;
-    
-    case ErrorType::INVALID_NAME :
-        std::cout << "ERROR: The given name is not valid." << std::endl;
         break;
     
     case ErrorType::ID_OVERFLOW :
@@ -99,46 +95,50 @@ void CommandParser::ErrorMessage(ErrorType error)
 
 // create a operator() overload that takes a string commandInput and returns a vector<string> that splits the string up by IsSeperator() and IsValidOperator()
 // also check for when there is a quote take the whole string with special symbols and spaces as one string and push it to the vector after the ending quote is found
-vector<string> CommandParser::operator()(string commandInput)
+vector<string> CommandParser::operator()(const string commandInput) const
 {
     vector<string> parsedCommand;
-    string temp;
-    bool inQuote = false;
+    string arg;
+    bool inQuotes = false;
+
     for (int i = 0; i < commandInput.size(); ++i)
     {
         if (commandInput[i] == '"')
         {
-            inQuote = !inQuote;
+            inQuotes = !inQuotes;
             continue;
         }
-        if (inQuote)
-            temp += commandInput[i];
+        if (inQuotes)
+            arg += commandInput[i];
         else if (IsSeperator(commandInput[i]))
         {
-            if (!temp.empty())
-                parsedCommand.push_back(temp);
-            temp.clear();
+            if (!arg.empty())
+                parsedCommand.push_back(arg);
+            arg.clear();
         }
         else if (IsValidOperator(commandInput[i]))
         {
-            if (!temp.empty())
-                parsedCommand.push_back(temp);
-            temp.clear();
-            temp += commandInput[i];
-            parsedCommand.push_back(temp);
-            temp.clear();
+            if (!arg.empty())
+            {
+                parsedCommand.push_back(arg);
+                arg.clear();
+            }
+            
+            arg += commandInput[i];
+            parsedCommand.push_back(arg);
+            arg.clear();
         }
         else
-            temp += commandInput[i];
+            arg += commandInput[i];
     }
 
-    if (!temp.empty())
-        parsedCommand.push_back(temp);
+    if (!arg.empty())
+        parsedCommand.push_back(arg);
         
     return ValidateParse(parsedCommand);
 }
 
-vector<string> CommandParser::ValidateParse(vector<string>& parsedCommand)
+vector<string> CommandParser::ValidateParse(const vector<string>& parsedCommand) const
 {
     if (parsedCommand.size() == 0 || parsedCommand.size() > 4)
     {

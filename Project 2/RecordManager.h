@@ -13,17 +13,16 @@ private:
 
     void AssembleStudents();
 
-    void ADD(unsigned int ID, string name, unsigned short age);
-    void FIND(unsigned int ID, char relation);
-    void FIND(string name, char relation);
-    void FIND(unsigned short age, char relation);
-    void REMOVE(unsigned int ID, char relation);
-    void REMOVE(string name, char relation);
-    void REMOVE(unsigned short age, char relation);
+    void ADD(const unsigned int& ID, const string& name, const unsigned short& age);
+    void FIND(const unsigned int& ID, const char& relation);
+    void FIND(const string& name, const char& relation);
+    void FIND(const unsigned short& age, const char& relation);
+    void REMOVE(const unsigned int& ID, const char& relation);
+    void REMOVE(const string& name, const char& relation);
+    void REMOVE(const unsigned short& age, const char& relation);
     void STOP();
 
 public:
     RecordManager();
-    vector<StudentRecord> GetStudents() const;
     bool Process(vector<string> parsedCommand);
 };
