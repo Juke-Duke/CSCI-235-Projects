@@ -153,14 +153,14 @@ void RecordManager::REMOVE(const unsigned int& ID, const char& relation)
 
 void RecordManager::REMOVE(const string& name, const char& relation)
 {
-    for (StudentRecord& student : students)
+    for (int i = 0; i < students.size(); ++i)
     {
-        if (relation == '=' && student.name == name)
-            student.Display();
-        else if (relation == '>' && student.name > name)
-            student.Display();
-        else if (relation == '<' && student.name < name)
-            student.Display();
+        if (relation == '=' && students[i].name == name)
+            students.erase(students.begin() + i);
+        else if (relation == '>' && students[i].name > name)
+            students.erase(students.begin() + i);
+        else if (relation == '<' && students[i].name < name)
+            students.erase(students.begin() + i);
     }
 }
 
