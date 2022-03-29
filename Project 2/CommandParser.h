@@ -19,7 +19,7 @@ enum class ErrorType
 class CommandParser
 {
 private:
-    const string 
+    const string
     commands[4] = {"ADD", "FIND", "REMOVE", "STOP"},
     fields[3] = {"id", "name", "age"};
 
