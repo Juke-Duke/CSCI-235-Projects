@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <climits>
 using std::string, std::vector;
 
 enum class ErrorType

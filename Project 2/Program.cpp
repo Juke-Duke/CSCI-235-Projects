@@ -9,7 +9,7 @@ int main()
     string input;
     bool running = true;
 
-    std::cout << "** Student records data will be stored in StudentRecords.txt **" << std::endl;
+    std::cout << "*** Student records data will be stored in StudentRecords.txt ***" << std::endl;
     while(running)
     {
         std::cout << ":// ";
