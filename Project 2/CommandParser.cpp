@@ -98,15 +98,21 @@ vector<string> CommandParser::operator()(const string commandInput) const
     vector<string> parsedCommand;
     string arg;
     bool inQuotes = false;
+    int quoteCount = 0;
 
     for (int i = 0; i < commandInput.size(); ++i)
     {
-        if (commandInput[i] == '"')
+        if (commandInput[i] == '"' && quoteCount < 2)
         {
             inQuotes = !inQuotes;
-            continue;
+            ++quoteCount;
         }
-        if (inQuotes)
+        else if  (commandInput[i] == '"' && quoteCount >= 2)
+        {
+            arg += commandInput[i];
+            parsedCommand.push_back(arg);
+        }
+        else if (inQuotes)
             arg += commandInput[i];
         else if (IsSeperator(commandInput[i]))
         {
@@ -189,7 +195,7 @@ vector<string> CommandParser::ValidateParse(const vector<string>& parsedCommand)
             ErrorMessage(ErrorType::ID_OVERFLOW);
             return {};
         }
-        else if (parsedCommand[1] == "age" && (!IsNumber(parsedCommand[3]) || UShortOverflow(parsedCommand[3])) )
+        else if (parsedCommand[1] == "age" && (!IsNumber(parsedCommand[3]) || UShortOverflow(parsedCommand[3])))
         {
             ErrorMessage(ErrorType::AGE_OVERFLOW);
             return {};
