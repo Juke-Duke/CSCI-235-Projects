@@ -10,7 +10,7 @@ int main()
     bool running = true;
 
     std::cout << "*** Student records data will be stored in StudentRecords.txt ***" << std::endl;
-    while(running)
+    while (running)
     {
         std::cout << ":// ";
         std::getline(std::cin, input);
