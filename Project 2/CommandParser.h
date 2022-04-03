@@ -36,5 +36,5 @@ private:
     vector<string> ValidateParse(const vector<string>& parsedCommand) const;
 
 public:
-    vector<string> operator()(const string commandInput) const;
+    vector<string> operator()(const string& commandInput) const;
 };

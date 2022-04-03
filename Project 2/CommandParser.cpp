@@ -93,7 +93,7 @@ void CommandParser::ErrorMessage(const ErrorType error) const
     }
 }
 
-vector<string> CommandParser::operator()(const string commandInput) const
+vector<string> CommandParser::operator()(const string& commandInput) const
 {
     vector<string> parsedCommand;
     string arg;
