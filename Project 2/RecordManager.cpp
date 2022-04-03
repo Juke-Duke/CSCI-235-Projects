@@ -51,7 +51,7 @@ bool RecordManager::Process(vector<string> parsedCommand)
 void RecordManager::AssembleStudents()
 {
     std::ifstream file;
-    file.open("StudentRecords.txt", std::ios::out);
+    file.open("StudentRecords.txt");
 
     if (file.is_open())
     {
@@ -180,7 +180,7 @@ void RecordManager::REMOVE(const unsigned short& age, const char& relation)
 void RecordManager::STOP()
 {
     std::ofstream file;
-    file.open("StudentRecords.txt", std::ios::out);
+    file.open("StudentRecords.txt");
 
     if (file.is_open())
     {
