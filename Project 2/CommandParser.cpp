@@ -1,10 +1,8 @@
 #include "CommandParser.h"
 
-bool CommandParser::IsSeperator(const char& arg) const
-    { return arg == ' ' || arg == '\t'; }
+bool CommandParser::IsSeperator(const char& arg) const { return arg == ' ' || arg == '\t'; }
 
-bool CommandParser::IsValidOperator(const char& operation) const
-    { return operation == '=' || operation == '>' || operation == '<'; }
+bool CommandParser::IsValidOperator(const char& operation) const { return operation == '=' || operation == '>' || operation == '<'; }
 
 bool CommandParser::IsValidCommand(const string& arg) const
 {
