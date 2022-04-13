@@ -142,7 +142,7 @@ vector<string> CommandParser::operator()(const string& commandInput) const
 
 vector<string> CommandParser::ValidateParse(const vector<string>& parsedCommand) const
 {
-    if (parsedCommand.size() == 0 || parsedCommand.size() > 4)
+    if (parsedCommand.empty() || parsedCommand.size() > 4)
     {
         ErrorMessage(ErrorType::ILLEGAL_INPUT);
         return {};
