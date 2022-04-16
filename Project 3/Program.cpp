@@ -1,20 +1,17 @@
 #include "HUNLANCompiler.h"
+#include <fstream>
 using std::cout, std::endl, std::string, std::vector;
 
 int main()
 {
+    std::ifstream file("input.txt");
     HUNLANCompiler compiler;
     string line;
-    size_t lineNumber = 0;
-    while (getline(std::cin, line))
+    size_t lineNumber = 1;
+    while (std::getline(file, line))
     {
         vector<string> parsedLine = compiler(line, lineNumber);
-        
-        cout << endl;
-        for (string token : parsedLine)
-            cout << token << endl;
-        cout << endl;
-
+        compiler.Execute(parsedLine);
         ++lineNumber;
     }
 
