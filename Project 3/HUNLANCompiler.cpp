@@ -51,7 +51,7 @@ bool HUNLANCompiler::IsValidArithmetic(const vector<string>& expression, const s
             ErrorMessage(ErrorType::STRING_ARITHMETIC, lineNumber);
             return false;
         }
-        else if (i % 2 == 0 && IsValidOperator(expression[i][0]))
+        else if (i % 2 == 0 && IsValidOperator(expression[i][0]) || IsValidOperator(expression[expression.size() - 1][0]))
         {
             ErrorMessage(ErrorType::ILLEGAL_ARITHMETIC, lineNumber);
             return false;
@@ -196,7 +196,7 @@ void HUNLANCompiler::ErrorMessage(const ErrorType error, const size_t& lineNumbe
     }
 }
 
-vector<string> HUNLANCompiler::operator()(const string& line, size_t& lineNumber) const
+vector<string> HUNLANCompiler::operator()(const string& line, const size_t& lineNumber) const
 {
     vector<string> parsedLine;
     string token;
@@ -232,7 +232,15 @@ vector<string> HUNLANCompiler::operator()(const string& line, size_t& lineNumber
             token.clear();
         }
         else if (inQuotes)
-            token += line[i];
+        {
+            if (line[i] == '\\' && line[i + 1] == 'n')
+            {
+                token += '\n';
+                ++i;
+            }
+            else
+                token += line[i];
+        }
         else if (IsSeperator(line[i]))
         {
             if (!token.empty())
@@ -251,26 +259,8 @@ vector<string> HUNLANCompiler::operator()(const string& line, size_t& lineNumber
             parsedLine.push_back(token);
             token.clear();
         }
-        else if (line[i] == '\\')
-        {
-            if (!token.empty())
-            {
-                parsedLine.push_back(token);
-                token.clear();
-            }
-
-            token += line[i];
-        }
         else
-        {
-            if (token == "\\")
-            {
-                token += line[i];
-                parsedLine.push_back(token);
-            }
-            else
-                token += line[i];
-        }
+            token += line[i];
     }
 
     if (!token.empty())
@@ -279,7 +269,7 @@ vector<string> HUNLANCompiler::operator()(const string& line, size_t& lineNumber
     return ValidateParse(parsedLine, lineNumber);
 }
 
-vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, size_t& lineNumber) const
+vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, const size_t& lineNumber) const
 {
     if (parsedLine.empty())
         return {"EMPTY"};

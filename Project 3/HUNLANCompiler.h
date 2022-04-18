@@ -41,9 +41,9 @@ private:
     bool IsValidArithmetic(const vector<string>& expression, const size_t& lineNumber) const;
     long long Arithmetic(const vector<string>& expression);
     void ErrorMessage(const ErrorType error, const size_t& lineNumber) const;
-    vector<string> ValidateParse(const vector<string>& parsedLine, size_t& lineNumber) const;
+    vector<string> ValidateParse(const vector<string>& parsedLine, const size_t& lineNumber) const;
 
 public:
-    vector<string> operator()(const string& line, size_t& lineNumber) const;
+    vector<string> operator()(const string& line, const size_t& lineNumber) const;
     bool Execute(const vector<string>& validLine);
 };
