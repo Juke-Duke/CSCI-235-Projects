@@ -45,5 +45,5 @@ private:
 
 public:
     vector<string> operator()(const string& line, size_t& lineNumber) const;
-    void Execute(const vector<string>& validLine);
+    bool Execute(const vector<string>& validLine);
 };

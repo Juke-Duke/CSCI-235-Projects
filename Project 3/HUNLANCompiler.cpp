@@ -282,7 +282,7 @@ vector<string> HUNLANCompiler::operator()(const string& line, size_t& lineNumber
 vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, size_t& lineNumber) const
 {
     if (parsedLine.empty())
-        return {};
+        return {"EMPTY"};
     else if (parsedLine[1][0] == '=' && !NumberExists(parsedLine[0]) && !StringExists(parsedLine[0]))
     {
         ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
@@ -394,11 +394,12 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, s
     return parsedLine;
 }
 
-void HUNLANCompiler::Execute(const vector<string>& validLine)
+bool HUNLANCompiler::Execute(const vector<string>& validLine)
 {
     if (validLine.empty())
-        return;
-    
+        return false;
+    else if (validLine[0] == "EMPTY")
+        return true;
     if (IsValidKeyword(validLine[0]))
     {
         string keyword = validLine[0], variable = validLine[1];
@@ -438,4 +439,6 @@ void HUNLANCompiler::Execute(const vector<string>& validLine)
                 strings[variable] = StringValueOf(assignment);
         }
     }
+
+    return true;
 }

@@ -2,16 +2,16 @@
 #include <fstream>
 using std::cout, std::endl, std::string, std::vector;
 
-int main()
+int main(int argc, char** argv)
 {
-    std::ifstream file("input.txt");
+    std::ifstream file(argv[1]);
     HUNLANCompiler compiler;
     string line;
     size_t lineNumber = 1;
-    while (std::getline(file, line))
+    bool running = true;
+    while (std::getline(file, line) && running)
     {
-        vector<string> parsedLine = compiler(line, lineNumber);
-        compiler.Execute(parsedLine);
+        running = compiler.Execute(compiler(line, lineNumber));
         ++lineNumber;
     }
 
