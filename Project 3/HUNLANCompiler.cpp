@@ -143,55 +143,55 @@ void HUNLANCompiler::ErrorMessage(const ErrorType error, const size_t& lineNumbe
     switch (error)
     {
         case ErrorType::INVALID_COMMAND:
-            std::cout << "Line " << lineNumber << ": ERROR: Invalid commands." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Invalid commands.\n" << std::endl;
             break;
 
         case ErrorType::EXCESS_TOKENS:
-            std::cout << "Line " << lineNumber << ": ERROR: Too many arguments." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Too many arguments.\n" << std::endl;
             break;
 
         case ErrorType::NUMBER_OVERFLOW:
-            std::cout << "Line " << lineNumber << ": ERROR: Number is too large to store." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Number is too large to store.\n" << std::endl;
             break;
         
         case ErrorType::ILLEGAL_NUMBER_DECLERATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Incorrect decleration of type \"NUMBER\"." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Incorrect decleration of type \"NUMBER\".\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_STRING_DECLERATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Incorrect declaration of type \"STRING\"." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Incorrect declaration of type \"STRING\".\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_NUMBER_INTIALIZATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Cannot assign type \"STRING\" to type \"NUMBER\"." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Cannot assign type \"STRING\" to type \"NUMBER\".\n" << std::endl;
             break;
         
         case ErrorType::ILLEGAL_STRING_INTIALIZATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Cannot assign type \"NUMBER\" to type \"STRING\"." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Cannot assign type \"NUMBER\" to type \"STRING\".\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_PRINT:
-            std::cout << "Line " << lineNumber << ": ERROR: The print statement is illegal." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: The print statement is illegal.\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_VARIABLE_NAME:
-            std::cout << "Line " << lineNumber << ": ERROR: Illegal variable name." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Illegal variable name.\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_REDEFINITON:
-            std::cout << "Line " << lineNumber << ": ERROR: Redefinition of existing variable is illegal." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Redefinition of existing variable is illegal.\n" << std::endl;
             break;
         
         case ErrorType::UNDEFINED_VARIABLE:
-            std::cout << "Line " << lineNumber << ": ERROR: Undefined variable." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Undefined variable.\n" << std::endl;
             break;
         
         case ErrorType::ILLEGAL_ARITHMETIC:
-            std::cout << "Line " << lineNumber << ": ERROR: Illegal arithmetic expression." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Illegal arithmetic expression.\n" << std::endl;
             break;
         
         case ErrorType::STRING_ARITHMETIC:
-            std::cout << "Line " << lineNumber << ": ERROR: Cannot perform arithmetic on type \"STRING\"." << std::endl;
+            std::cout << "Line " << lineNumber << ": ERROR: Cannot perform arithmetic on type \"STRING\".\n" << std::endl;
             break;
     }
 }
@@ -273,16 +273,20 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
 {
     if (parsedLine.empty())
         return {"EMPTY"};
+    else if (parsedLine.size() < 2)
+    {
+        ErrorMessage(ErrorType::INVALID_COMMAND, lineNumber);
+        return {};
+    }
     else if (parsedLine[1][0] == '=' && !NumberExists(parsedLine[0]) && !StringExists(parsedLine[0]))
     {
         ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
         return {};
     }
-    else if (!IsValidKeyword(parsedLine[0]) 
-    && !NumberExists(parsedLine[0]) && !StringExists(parsedLine[0]))
+    else if (!IsValidKeyword(parsedLine[0]) && !NumberExists(parsedLine[0]) && !StringExists(parsedLine[0]))
     {
         ErrorMessage(ErrorType::INVALID_COMMAND, lineNumber);
-        return {};   
+        return {};
     }
     else if (IsValidKeyword(parsedLine[0]))
     {
@@ -323,6 +327,11 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
     }
     else if (parsedLine[1][0] == '=')
     {
+        if (parsedLine.size() < 3)
+        {
+            ErrorMessage(ErrorType::INVALID_COMMAND, lineNumber);
+            return {};
+        }
         string variable = parsedLine[0];
         if (!NumberExists(variable) && !StringExists(variable))
         {
@@ -352,6 +361,11 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
             else if (StringExists(assignment))
             {
                 ErrorMessage(ErrorType::ILLEGAL_NUMBER_INTIALIZATION, lineNumber);
+                return {};
+            }
+            else if (IsNumber(assignment) && LongLongOverflow(assignment))
+            {
+                ErrorMessage(ErrorType::NUMBER_OVERFLOW, lineNumber);
                 return {};
             }
         }
@@ -394,7 +408,7 @@ bool HUNLANCompiler::Execute(const vector<string>& validLine)
     {
         string keyword = validLine[0], variable = validLine[1];
         if (keyword == "NUMBER")
-            numbers[variable] = 10;
+            numbers[variable] = 0;
         else if (keyword == "STRING")
             strings[variable] = "";
         else if (keyword == "PRINT")
