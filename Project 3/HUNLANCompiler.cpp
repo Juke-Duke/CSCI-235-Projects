@@ -143,55 +143,55 @@ void HUNLANCompiler::ErrorMessage(const ErrorType error, const size_t& lineNumbe
     switch (error)
     {
         case ErrorType::INVALID_COMMAND:
-            std::cout << "Line " << lineNumber << ": ERROR: Invalid commands.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Invalid commands.\n" << std::endl;
             break;
 
         case ErrorType::EXCESS_TOKENS:
-            std::cout << "Line " << lineNumber << ": ERROR: Too many arguments.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Too many arguments.\n" << std::endl;
             break;
 
         case ErrorType::NUMBER_OVERFLOW:
-            std::cout << "Line " << lineNumber << ": ERROR: Number is too large to store.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Number is too large to store.\n" << std::endl;
             break;
         
         case ErrorType::ILLEGAL_NUMBER_DECLERATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Incorrect decleration of type \"NUMBER\".\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Incorrect decleration of type \"NUMBER\".\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_STRING_DECLERATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Incorrect declaration of type \"STRING\".\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Incorrect declaration of type \"STRING\".\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_NUMBER_INTIALIZATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Cannot assign type \"STRING\" to type \"NUMBER\".\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Cannot assign type \"STRING\" to type \"NUMBER\".\n" << std::endl;
             break;
         
         case ErrorType::ILLEGAL_STRING_INTIALIZATION:
-            std::cout << "Line " << lineNumber << ": ERROR: Cannot assign type \"NUMBER\" to type \"STRING\".\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Cannot assign type \"NUMBER\" to type \"STRING\".\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_PRINT:
-            std::cout << "Line " << lineNumber << ": ERROR: The print statement is illegal.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: The print statement is illegal.\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_VARIABLE_NAME:
-            std::cout << "Line " << lineNumber << ": ERROR: Illegal variable name.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Illegal variable name.\n" << std::endl;
             break;
 
         case ErrorType::ILLEGAL_REDEFINITON:
-            std::cout << "Line " << lineNumber << ": ERROR: Redefinition of existing variable is illegal.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Redefinition of existing variable is illegal.\n" << std::endl;
             break;
         
         case ErrorType::UNDEFINED_VARIABLE:
-            std::cout << "Line " << lineNumber << ": ERROR: Undefined variable.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Undefined variable.\n" << std::endl;
             break;
         
         case ErrorType::ILLEGAL_ARITHMETIC:
-            std::cout << "Line " << lineNumber << ": ERROR: Illegal arithmetic expression.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Illegal arithmetic expression.\n" << std::endl;
             break;
         
         case ErrorType::STRING_ARITHMETIC:
-            std::cout << "Line " << lineNumber << ": ERROR: Cannot perform arithmetic on type \"STRING\".\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Cannot perform arithmetic on type \"STRING\".\n" << std::endl;
             break;
     }
 }
@@ -272,7 +272,7 @@ vector<string> HUNLANCompiler::operator()(const string& line, const size_t& line
 vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, const size_t& lineNumber) const
 {
     if (parsedLine.empty())
-        return {"EMPTY"};
+        return {"EMPTYLINE"};
     else if (parsedLine.size() < 2)
     {
         ErrorMessage(ErrorType::INVALID_COMMAND, lineNumber);
@@ -402,7 +402,7 @@ bool HUNLANCompiler::Execute(const vector<string>& validLine)
 {
     if (validLine.empty())
         return false;
-    else if (validLine[0] == "EMPTY")
+    else if (validLine[0] == "EMPTYLINE")
         return true;
     if (IsValidKeyword(validLine[0]))
     {
