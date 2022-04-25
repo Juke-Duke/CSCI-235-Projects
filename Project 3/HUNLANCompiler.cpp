@@ -338,7 +338,7 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
                 return {};
             }
             string variable = parsedLine[1];
-            if (!IsValidVariableName(variable))
+            if (!IsValidVariableName(variable) || IsValidKeyword(variable))
             {
                 ErrorMessage(ErrorType::ILLEGAL_VARIABLE_NAME, lineNumber);
                 return {};
