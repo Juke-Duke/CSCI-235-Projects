@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <climits>
 #include <unordered_map>
 using std::string, std::vector, std::unordered_map;
 
@@ -18,7 +19,7 @@ enum class ErrorType
     ILLEGAL_REDEFINITON,
     UNDEFINED_VARIABLE,
     ILLEGAL_ARITHMETIC,
-    STRING_ARITHMETIC,
+    ILLEGAL_STRING_ARITHMETIC,
     ILLEGAL_PRINT
 };
 
@@ -28,19 +29,21 @@ private:
     unordered_map<string, long long> numbers;
     unordered_map<string, string> strings;
 
+    bool IsSeperator(const char& token) const;
+    bool IsEscapeSequence(const char& token) const;
+    bool IsValidOperator(const char& operation) const;
+    bool IsValidKeyword(const string& token) const;
+    bool IsNumber(const string& num) const;
+    bool IsValidVariableName(const string& name) const;
+    bool IsValidArithmetic(const vector<string>& expression, const size_t& lineNumber) const;
+    long long CalculateArithmetic(const vector<string>& expression);
+    bool LongLongOverflow(const string& num) const;
+    char EscapeCharacter(const char& token) const;
     bool NumberExists(const string& variable) const;
     bool StringExists(const string& variable) const;
     long long NumberValueOf(const string& numName);
     string StringValueOf(const string& strName);
-    bool IsSeperator(const char& token) const;
-    bool IsValidOperator(const char& operation) const;
-    bool IsValidKeyword(const string& token) const;
-    bool IsNumber(const string& num) const;
-    bool LongLongOverflow(const string& num) const;
-    bool IsValidVariableName(const string& name) const;
-    bool IsValidArithmetic(const vector<string>& expression, const size_t& lineNumber) const;
-    long long Arithmetic(const vector<string>& expression);
-    void ErrorMessage(const ErrorType error, const size_t& lineNumber) const;
+    void ErrorMessage(const ErrorType error, const size_t& lineNumber, const string& undefined = "") const;
     vector<string> ValidateParse(const vector<string>& parsedLine, const size_t& lineNumber) const;
 
 public:

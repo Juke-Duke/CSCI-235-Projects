@@ -1,6 +1,5 @@
 #include "HUNLANCompiler.h"
 #include <fstream>
-using std::cout, std::endl, std::string, std::vector;
 
 int main(int argc, char** argv)
 {
@@ -9,7 +8,8 @@ int main(int argc, char** argv)
     string line;
     size_t lineNumber = 1;
     bool running = true;
-    while (std::getline(file, line) && running)
+
+    while (running && std::getline(file, line))
     {
         running = compiler.Execute(compiler(line, lineNumber));
         ++lineNumber;

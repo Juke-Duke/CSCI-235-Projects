@@ -6,6 +6,38 @@ bool HUNLANCompiler::IsValidOperator(const char& operation) const { return opera
 
 bool HUNLANCompiler::IsValidKeyword(const string& token) const { return token == "NUMBER" || token == "STRING" || token == "PRINT"; }
 
+bool HUNLANCompiler::IsEscapeSequence(const char& token) const 
+{ 
+    return 
+    token == '\\' 
+    || token == '?'
+    || token == 'n'
+    || token == 'a'
+    || token == 'b'
+    || token == 'f'
+    || token == 'r'
+    || token == 't'
+    || token == 'v';
+}
+
+char HUNLANCompiler::EscapeCharacter(const char& token) const
+{
+    switch (token)
+    {
+    case '\\': return '\\';
+    case '?': return '\?';
+    case 'n': return '\n';
+    case 'a': return '\a';
+    case 'b': return '\b';
+    case 'f': return '\f';
+    case 'r': return '\r';
+    case 't': return '\t';
+    case 'v': return '\v';
+    }
+
+    return ' ';
+}
+
 bool HUNLANCompiler::IsNumber(const string& num) const
 {
     for (char digit : num)
@@ -13,21 +45,6 @@ bool HUNLANCompiler::IsNumber(const string& num) const
             return false;
     
     return true;
-}
-
-bool HUNLANCompiler::LongLongOverflow(const string& num) const
-{
-    string uIntMax = std::to_string(LLONG_MAX);
-    if (num.size() > uIntMax.size())
-        return true;
-    else if (num.size() == uIntMax.size())
-    {
-        for (int j = 0; j < num.size(); ++j)
-            if (num[j] - '0' > uIntMax[j] - '0')
-                return true;
-    }
-
-    return false;
 }
 
 bool HUNLANCompiler::IsValidVariableName(const string& name) const
@@ -48,7 +65,7 @@ bool HUNLANCompiler::IsValidArithmetic(const vector<string>& expression, const s
     {
         if (i % 2 == 0 && StringExists(expression[i]))
         {
-            ErrorMessage(ErrorType::STRING_ARITHMETIC, lineNumber);
+            ErrorMessage(ErrorType::ILLEGAL_STRING_ARITHMETIC, lineNumber);
             return false;
         }
         else if (i % 2 == 0 && IsValidOperator(expression[i][0]) || IsValidOperator(expression[expression.size() - 1][0]))
@@ -58,7 +75,7 @@ bool HUNLANCompiler::IsValidArithmetic(const vector<string>& expression, const s
         }
         else if (i % 2 == 0 && (!IsNumber(expression[i]) && !NumberExists(expression[i])))
         {
-            ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
+            ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber, expression[i]);
             return false;
         }
         else if (i % 2 == 0 && IsNumber(expression[i]) && LongLongOverflow(expression[i]))
@@ -76,7 +93,7 @@ bool HUNLANCompiler::IsValidArithmetic(const vector<string>& expression, const s
     return true;
 }
 
-long long HUNLANCompiler::Arithmetic(const vector<string>& expression)
+long long HUNLANCompiler::CalculateArithmetic(const vector<string>& expression)
 {
     vector<string> cleanedExpression;
     for (int i = 2; i < expression.size(); ++i)
@@ -118,6 +135,21 @@ long long HUNLANCompiler::Arithmetic(const vector<string>& expression)
     return result;
 }
 
+bool HUNLANCompiler::LongLongOverflow(const string& num) const
+{
+    string uIntMax = std::to_string(LLONG_MAX);
+    if (num.size() > uIntMax.size())
+        return true;
+    else if (num.size() == uIntMax.size())
+    {
+        for (int j = 0; j < num.size(); ++j)
+            if (num[j] - '0' > uIntMax[j] - '0')
+                return true;
+    }
+
+    return false;
+}
+
 bool HUNLANCompiler::NumberExists(const string& numName) const
 {
     if (numbers.find(numName) != numbers.end())
@@ -138,7 +170,7 @@ long long HUNLANCompiler::NumberValueOf(const string& numName) { return numbers[
 
 string HUNLANCompiler::StringValueOf(const string& strName) { return strings[strName]; }
 
-void HUNLANCompiler::ErrorMessage(const ErrorType error, const size_t& lineNumber) const
+void HUNLANCompiler::ErrorMessage(const ErrorType error, const size_t& lineNumber, const string& undefined) const
 {
     switch (error)
     {
@@ -183,14 +215,14 @@ void HUNLANCompiler::ErrorMessage(const ErrorType error, const size_t& lineNumbe
             break;
         
         case ErrorType::UNDEFINED_VARIABLE:
-            std::cout << "\nLine " << lineNumber << ": ERROR: Undefined variable.\n" << std::endl;
+            std::cout << "\nLine " << lineNumber << ": ERROR: Undefined variable \"" << undefined << "\".\n" << std::endl;
             break;
         
         case ErrorType::ILLEGAL_ARITHMETIC:
             std::cout << "\nLine " << lineNumber << ": ERROR: Illegal arithmetic expression.\n" << std::endl;
             break;
         
-        case ErrorType::STRING_ARITHMETIC:
+        case ErrorType::ILLEGAL_STRING_ARITHMETIC:
             std::cout << "\nLine " << lineNumber << ": ERROR: Cannot perform arithmetic on type \"STRING\".\n" << std::endl;
             break;
     }
@@ -233,11 +265,13 @@ vector<string> HUNLANCompiler::operator()(const string& line, const size_t& line
         }
         else if (inQuotes)
         {
-            if (line[i] == '\\' && line[i + 1] == 'n')
+            if (line[i] == '\\' && IsEscapeSequence(line[i + 1]))
             {
-                token += '\n';
+                token += EscapeCharacter(line[i + 1]);
                 ++i;
             }
+            else if (line[i] == '\\' && !IsEscapeSequence(line[i + 1]))
+                continue;
             else
                 token += line[i];
         }
@@ -280,10 +314,15 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
     }
     else if (parsedLine[1][0] == '=' && !NumberExists(parsedLine[0]) && !StringExists(parsedLine[0]))
     {
-        ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
+        ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber, parsedLine[0]);
         return {};
     }
     else if (!IsValidKeyword(parsedLine[0]) && !NumberExists(parsedLine[0]) && !StringExists(parsedLine[0]))
+    {
+        ErrorMessage(ErrorType::INVALID_COMMAND, lineNumber);
+        return {};
+    }
+    else if ((NumberExists(parsedLine[0]) || StringExists(parsedLine[0])) && parsedLine[1][0] != '=')
     {
         ErrorMessage(ErrorType::INVALID_COMMAND, lineNumber);
         return {};
@@ -320,7 +359,7 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
             string print = parsedLine[1];
             if (print[0] != '"' && !IsNumber(print) && !NumberExists(print) && !StringExists(print))
             {
-                ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
+                ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber, print);
                 return{};
             }
         }
@@ -335,7 +374,7 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
         string variable = parsedLine[0];
         if (!NumberExists(variable) && !StringExists(variable))
         {
-            ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
+            ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber, variable);
             return {};
         }
         string assignment = parsedLine[2];
@@ -350,12 +389,12 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
                 return {};
             else if (assignment[0] == '"' || StringExists(assignment))
             {
-                ErrorMessage(ErrorType::ILLEGAL_NUMBER_DECLERATION, lineNumber);
+                ErrorMessage(ErrorType::ILLEGAL_NUMBER_INTIALIZATION, lineNumber);
                 return {};
             }
             else if (!IsNumber(assignment) && !NumberExists(assignment))
             {
-                ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
+                ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber, assignment);
                 return {};
             }
             else if (StringExists(assignment))
@@ -381,15 +420,14 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
                 ErrorMessage(ErrorType::ILLEGAL_STRING_DECLERATION, lineNumber);
                 return {};
             }
-            else if (assignment[0] != '"' && 
-            !StringExists(assignment))
-            {
-                ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber);
-                return {};
-            }
-            else if (NumberExists(assignment))
+            else if (NumberExists(assignment) || IsNumber(assignment))
             {
                 ErrorMessage(ErrorType::ILLEGAL_STRING_INTIALIZATION, lineNumber);
+                return {};
+            }
+            else if (assignment[0] != '"' && !StringExists(assignment))
+            {
+                ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber, assignment);
                 return {};
             }
         }
@@ -433,7 +471,7 @@ bool HUNLANCompiler::Execute(const vector<string>& validLine)
             else if (validLine.size() == 3 && NumberExists(assignment))
                 numbers[variable] = NumberValueOf(assignment);
             else if (validLine.size() > 3)
-                numbers[variable] = Arithmetic(validLine);
+                numbers[variable] = CalculateArithmetic(validLine);
         }
         else if (StringExists(variable))
         {
