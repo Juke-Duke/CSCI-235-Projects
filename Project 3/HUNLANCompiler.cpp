@@ -360,7 +360,7 @@ vector<string> HUNLANCompiler::ValidateParse(const vector<string>& parsedLine, c
             if (print[0] != '"' && !IsNumber(print) && !NumberExists(print) && !StringExists(print))
             {
                 ErrorMessage(ErrorType::UNDEFINED_VARIABLE, lineNumber, print);
-                return{};
+                return {};
             }
         }
     }
