@@ -150,21 +150,9 @@ bool HUNLANCompiler::LongLongOverflow(const string& num) const
     return false;
 }
 
-bool HUNLANCompiler::NumberExists(const string& numName) const
-{
-    if (numbers.find(numName) != numbers.end())
-        return true;
-    
-    return false;
-}
+bool HUNLANCompiler::NumberExists(const string& numName) const { return numbers.find(numName) != numbers.end(); }
 
-bool HUNLANCompiler::StringExists(const string& strName) const
-{
-    if (strings.find(strName) != strings.end())
-        return true;
-    
-    return false;
-}
+bool HUNLANCompiler::StringExists(const string& strName) const { return strings.find(strName) != strings.end(); }
 
 long long HUNLANCompiler::NumberValueOf(const string& numName) { return numbers[numName]; }
 
