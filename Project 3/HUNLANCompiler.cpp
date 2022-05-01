@@ -141,11 +141,9 @@ bool HUNLANCompiler::LongLongOverflow(const string& num) const
     if (num.size() > uIntMax.size())
         return true;
     else if (num.size() == uIntMax.size())
-    {
         for (int j = 0; j < num.size(); ++j)
             if (num[j] - '0' > uIntMax[j] - '0')
                 return true;
-    }
 
     return false;
 }
