@@ -163,7 +163,7 @@ float HunPolynomial::operator()(const float& x) const
     float result = 0;
 
     for (int i = 0; i < coefficiants.size(); ++i)
-        result += coefficiants[i] * pow(x, coefficiants.size() - i - 1);
+        result += coefficiants[i] * pow(x, coefficiants.size() - 1 - i);
 
     return result;
 }
