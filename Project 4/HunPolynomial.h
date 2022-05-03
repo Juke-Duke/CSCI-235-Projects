@@ -8,7 +8,7 @@ using std::ostream, std::vector, std::stack;
 
 class HunPolynomial
 {
-private: 
+private:
     vector<int> coefficiants;
 
 public:
