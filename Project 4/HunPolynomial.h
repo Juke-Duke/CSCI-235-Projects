@@ -5,7 +5,6 @@
 #include <stack>
 using std::ostream, std::vector, std::stack;
 
-
 class HunPolynomial
 {
 private:
