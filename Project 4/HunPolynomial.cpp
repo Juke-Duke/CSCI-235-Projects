@@ -93,7 +93,7 @@ HunPolynomial HunPolynomial::operator-(const HunPolynomial& other) const
 
 HunPolynomial HunPolynomial::operator*(const HunPolynomial& other) const
 {
-    vector<int> result((coefficiants.size() + other.coefficiants.size()) - 2, 0);
+    vector<int> result((coefficiants.size() + other.coefficiants.size()), 0);
 
     for (int i = 0; i < coefficiants.size(); ++i)
     {
