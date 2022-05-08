@@ -114,7 +114,14 @@ HunPolynomial HunPolynomial::operator*(const HunPolynomial& other) const
 ostream& operator<<(ostream& out, const HunPolynomial& polynomial)
 {
     if (polynomial.coefficiants.size() == 1 && polynomial.coefficiants[0] != 0)
-        out << polynomial.coefficiants[0];
+    {
+        if (polynomial.coefficiants[0] > 0)
+            out << polynomial.coefficiants[0];
+        else
+            out << "- " << -polynomial.coefficiants[0];
+
+        return out;
+    }
 
     for (int i = 0; i < polynomial.coefficiants.size(); ++i)
     {
