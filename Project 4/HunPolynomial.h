@@ -10,6 +10,8 @@ class HunPolynomial
 private:
     vector<int> coefficiants;
 
+    void TrimCoefficiants();
+
 public:
     HunPolynomial();
     HunPolynomial(const vector<int>& coefficiants);
@@ -18,6 +20,6 @@ public:
     HunPolynomial operator+(const HunPolynomial& other) const;
     HunPolynomial operator-(const HunPolynomial& other) const;
     HunPolynomial operator*(const HunPolynomial& other) const;
-    friend ostream& operator<<(ostream& out, const HunPolynomial& polynomial);
+    friend ostream& operator<<(ostream& out, HunPolynomial& polynomial);
     float operator()(const float& x) const;
 };

@@ -2,7 +2,9 @@
 
 HunPolynomial::HunPolynomial() : coefficiants({}) {}
 
-HunPolynomial::HunPolynomial(const vector<int>& coefficiants)
+HunPolynomial::HunPolynomial(const vector<int>& coefficiants) : coefficiants(coefficiants) {}
+
+void HunPolynomial::TrimCoefficiants()
 {
     vector<int> trimmedCoefficiants;
     bool leadingZero = true;
@@ -18,7 +20,7 @@ HunPolynomial::HunPolynomial(const vector<int>& coefficiants)
             trimmedCoefficiants.push_back(coefficiants[i]);
     }
 
-    this->coefficiants = trimmedCoefficiants;
+    coefficiants = trimmedCoefficiants;
 }
 
 void HunPolynomial::Set(const vector<int>& coefficiants) { this->coefficiants = coefficiants; }
@@ -111,8 +113,10 @@ HunPolynomial HunPolynomial::operator*(const HunPolynomial& other) const
     return HunPolynomial(result);
 }
 
-ostream& operator<<(ostream& out, const HunPolynomial& polynomial)
+ostream& operator<<(ostream& out, HunPolynomial& polynomial)
 {
+    polynomial.TrimCoefficiants();
+
     if (polynomial.coefficiants.size() == 1 && polynomial.coefficiants[0] != 0)
     {
         if (polynomial.coefficiants[0] > 0)
