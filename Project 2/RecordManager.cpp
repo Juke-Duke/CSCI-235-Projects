@@ -140,41 +140,53 @@ void RecordManager::FIND(const unsigned short& age, const char& relation)
 
 void RecordManager::REMOVE(const unsigned int& ID, const char& relation)
 {
-    for (int i = 0; i < students.size(); ++i)
+    vector<StudentRecord> clean;
+
+    for (StudentRecord& student : students)
     {
-        if (relation == '=' && students[i].ID == ID)
-            students.erase(students.begin() + i);
-        else if (relation == '>' && students[i].ID > ID)
-            students.erase(students.begin() + i);
-        else if (relation == '<' && students[i].ID < ID)
-            students.erase(students.begin() + i);
+        if (relation == '=' && student.ID != ID)
+            clean.push_back(student);
+        else if (relation == '>' && student.ID <= ID)
+            clean.push_back(student);
+        else if (relation == '<' && student.ID >= ID)
+            clean.push_back(student);
     }
+
+    students = clean;
 }
 
 void RecordManager::REMOVE(const string& name, const char& relation)
 {
-    for (int i = 0; i < students.size(); ++i)
+    vector<StudentRecord> clean;
+
+    for (StudentRecord& student : students)
     {
-        if (relation == '=' && students[i].name == name)
-            students.erase(students.begin() + i);
-        else if (relation == '>' && students[i].name > name)
-            students.erase(students.begin() + i);
-        else if (relation == '<' && students[i].name < name)
-            students.erase(students.begin() + i);
+        if (relation == '=' && student.name != name)
+            clean.push_back(student);
+        else if (relation == '>' && student.name <= name)
+            clean.push_back(student);
+        else if (relation == '<' && student.name >= name)
+            clean.push_back(student);
     }
+
+    students = clean;
 }
 
 void RecordManager::REMOVE(const unsigned short& age, const char& relation)
 {
-    for (int i = 0; i < students.size(); ++i)
+    vector<StudentRecord> clean;
+
+    for (StudentRecord& student : students)
     {
-        if (relation == '=' && students[i].age == age)
-            students.erase(students.begin() + i);
-        else if (relation == '>' && students[i].age > age)
-            students.erase(students.begin() + i);
-        else if (relation == '<' && students[i].age < age)
-            students.erase(students.begin() + i);
+        if (relation == '=' && student.age != age)
+            clean.push_back(student);
+        else if (relation == '>' && student.age <= age)
+            clean.push_back(student);
+        else if (relation == '<' && student.age >= age)
+            clean.push_back(student);
     }
+
+    students = clean;
 }
 
 void RecordManager::STOP()
