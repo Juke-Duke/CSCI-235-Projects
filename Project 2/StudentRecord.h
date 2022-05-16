@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
-using std::string;
+#include <iomanip>
+using std::string, std::setw;
 
 struct StudentRecord
 {
