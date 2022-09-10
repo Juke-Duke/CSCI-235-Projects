@@ -30,7 +30,6 @@ class Rockstar. As discussed before, the number of days the room is busy is 10 d
 class Businessman. Objects of Businessman class has an additional income int field and the following parametrized constructor
 Businessman( GuestType, RoomType, stayDuration, additionalIncome )
 Pay attention, there are no setters (a.k.a mutators) for fields of the base class Guest. You’ll have to activate the parametrized constructor of Guest from the constructor of Businessman. The modern C++ constructor syntax allows you to do it.
-=========================================================
  
 Create GuestManager class. This class stores inside information about current hotel guests. Guests will be represented as objects of Guest subclasses. Most likely you’ll have a vector of pointers to Guest class. Here is a bunch of things that MUST be in your class.
 GuestManager (int #OfStandardRooms, int dayPriceStandard, int #OfComfortRooms, int dayPriceComfort)
