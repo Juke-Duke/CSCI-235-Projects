@@ -1,17 +1,14 @@
 In this assignment, lets create some kind of hotel management component.
-=========================================================
  
 Create modern C++ enumeration (enum class) called RoomType with two items in it, Standard and Comfort. You can find a description of such modern C++ enumerations using the following link (and in million other places too):
 https://www.codesdope.com/cpp-enum-class/
 Keep in mind, enum instances are small. It is ok to pass enum instance by copy.
-=========================================================
  
 Create modern C++ enumeration (enum class) called GuestType with three items in it, Family, Businessman, and Rockstar. Behavior of each guest type is the following:
 Family. Nothing special.
 Businessman. Businessman generates additional income each day (by actively using the items from the room refrigerator).
 Rockstar. Rockstar keeps room occupied for additional 10 days (because rockstar is a fool and completely thrashes the room so it requires a full 10-day renovation after the rockstar checks out). Pay attention, rockstar pays only for the days that were booked, but the room is occupied longer than booked.
 Both RoomType and GuestType enumerations are meant to be visible to users of your library.
-=========================================================
  
 Create an abstract Guest class. It has the following mandatory parts in it
 Protected fields for
